@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+# git hook to run a command after `git pull` if specified files was changed
+# Run `chmod +x post-merge` to make it executable then put it into `.git/hooks/`.
+
+changed_files="$(git diff-tree -r --name-only --no-commit-id ORIG_HEAD HEAD)"
+
+
+check_run() {
+  # Check if we have hosts file with more than one record in it
+  if [[ -e "hosts" ]] && [[ $(wc -l <hosts) -ge 2 ]]
+  then
+    echo "hosts file is present and it has some records already, checking if we need to regenerate it"
+    echo "$changed_files" | grep -P --quiet "$1" && $(run)
+    echo "No need to run anything"
+  else
+    echo "Your hosts file looks incomplete or absent, i will run playbook to fix this."
+    $(run)
+  fi
+}
+
+run() {
+  echo "I will run ansible playbook!"
+  exit 0
+}
+
+check_run "(group_vars/all/users|group_vars/all/team_servers|roles/ansible/templates)"
