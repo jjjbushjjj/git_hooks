@@ -11,7 +11,7 @@ check_run() {
   if [[ -e "hosts" ]] && [[ $(wc -l <hosts) -ge 3 ]]
   then
     echo "hosts file is present and it has some records already, checking if we need to regenerate it"
-    echo "$changed_files" | grep -P --quiet "$1" && $(run)
+    echo "$changed_files" | grep -P --quiet "$1" && run
     echo "No need to run anything"
   else
     echo "Your hosts file looks incomplete or absent, i will run playbook to fix this."
