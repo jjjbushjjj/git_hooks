@@ -8,14 +8,14 @@ changed_files="$(git diff-tree -r --name-only --no-commit-id ORIG_HEAD HEAD)"
 
 check_run() {
   # Check if we have hosts file with more than one record in it
-  if [[ -e "hosts" ]] && [[ $(wc -l <hosts) -ge 2 ]]
+  if [[ -e "hosts" ]] && [[ $(wc -l <hosts) -ge 3 ]]
   then
     echo "hosts file is present and it has some records already, checking if we need to regenerate it"
     echo "$changed_files" | grep -P --quiet "$1" && $(run)
     echo "No need to run anything"
   else
     echo "Your hosts file looks incomplete or absent, i will run playbook to fix this."
-    $(run)
+    echo $(run)
   fi
 }
 
